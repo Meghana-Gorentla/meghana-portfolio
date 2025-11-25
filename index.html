@@ -1146,7 +1146,14 @@ Currently exploring full-time opportunities as a Software Developer, Backend Eng
             </form>
         </div>
     </div>
-
+    
+     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your public key
+        (function(){
+            emailjs.init("ioytzVUjCnCHSBUCn");
+        })();
+    </script>
     <script>
         // Smooth section transitions with advanced animations
         function showSection(sectionId, element) {
@@ -1347,53 +1354,59 @@ Currently exploring full-time opportunities as a Software Developer, Backend Eng
         });
 
         // Email sending function using EmailJS
-        function sendEmail(event) {
-            event.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.textContent;
-            
-            // Get form data
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            
-            // Show loading state
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
-            
-            // Prepare email body
-            const emailBody = `
-Name: ${name}
-Email: ${email}
-Subject: ${subject}
-
-Message:
-${message}
-            `;
-            
-            // Create mailto link (fallback method)
-            const mailtoLink = `mailto:meghanagorentla@gmail.com?subject=Portfolio Contact: ${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-            
-            // Try to open default email client
-            const tempLink = document.createElement('a');
-            tempLink.href = mailtoLink;
-            tempLink.click();
+        
+        // Email sending function using EmailJS
+function sendEmail(event) {
+    event.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const originalText = submitBtn.textContent;
+    
+    // Get form data
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    
+    // Show loading state
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+    
+    // Prepare template parameters
+    const templateParams = {
+        from_name: name,
+        from_email: email,
+        subject: subject,
+        message: message,
+        to_email: 'meghanagorentla@gmail.com'
+    };
+    
+    // Send email using EmailJS
+    emailjs.send('service_us19s8a', 'template_r6e15by', templateParams)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
             
             // Show success message
-            setTimeout(() => {
-                alert('Email client opened! Please send the email from your default email application.');
-                
-                // Reset form
-                document.getElementById('contactForm').reset();
-                closeContactModal();
-                
-                // Reset button
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }, 1000);
-        }
+            alert('Message sent successfully! I\'ll get back to you soon.');
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+            closeContactModal();
+            
+            // Reset button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, function(error) {
+            console.log('FAILED...', error);
+            
+            // Show error message
+            alert('Failed to send message. Please try again or contact me directly at meghanagorentla@gmail.com');
+            
+            // Reset button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+}
     </script>
 </body>
 </html>
